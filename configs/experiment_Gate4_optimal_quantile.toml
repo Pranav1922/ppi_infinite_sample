@@ -1,0 +1,41 @@
+# Gate 4 — can the finite-pool safeguard t_min(n-2, N-1) be made narrower?
+# Docs: theory_finite_N.md Part IX. Preregistered before the run.
+experiment_id = "Gate4_optimal_quantile"
+description   = "Test whether any mathematically justified rule is narrower than t_min while keeping its protection. Primary grid is the difficult (small N, strong predictor) region named in the Gate-4 brief."
+
+seed_entropy = 20260825
+R            = 600_000       # conservative binomial MC s.e. 0.00065
+alpha_level  = 0.05
+eta          = 0.01          # Berger-Boos confidence-set level for the nuisance share
+
+# --- Part A: the criteria a successful rule must satisfy, fixed before searching ---------------
+# 1. q -> t_{n-2}   when N >= n-1
+# 2. q -> t_{N-1}   in the rho -> 1 limit when N < n-1
+# 3. no under-coverage in the tested finite-N region (3 MC s.e.)
+# 4. never wider than t_min
+# 5. large-N behaviour preserved
+[criteria]
+undercoverage_tolerance_se = 3.0
+must_reduce_to_t_n2_when_N_ge_n_minus_1 = true
+must_never_exceed_t_min = true
+
+# --- Part E: the primary difficult grid, exactly as specified ---------------------------------
+[grid_primary]
+n   = [10, 20, 50]
+rho = [0.9, 0.95, 0.99, 0.999]
+N   = [2, 3, 5, 10, 20, 25, 49, 50, 100]
+
+# --- Supplementary: is t_min WASTEFUL away from the binding regime? -----------------------------
+# The primary grid is entirely strong-predictor, where gamma -> 0 is the truth and no rule can
+# narrow. This grid asks the complementary question at moderate rho, where t_min still widens
+# (because N < n-1) but the binding endpoint is NOT the truth.
+[grid_supplementary]
+n   = [20, 50]
+rho = [0.0, 0.5]
+N   = [2, 3, 5, 10, 25, 49]
+
+# --- Part C: candidates. Only mathematically motivated rules are admitted. ---------------------
+[candidates]
+B9_t_n2 = "deployed: t_{n-2}"
+B9_tmin = "registered safeguard: t_{min(n-2, N-1)} -- Mickey & Brown (1966)"
+C5_bb   = "Berger & Boos (1994): sup of the exact two-df quantile over a 1-eta confidence set for the variance share, at level alpha-eta, clipped to [t_{n-2}, t_min]"

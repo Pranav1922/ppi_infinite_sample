@@ -1,0 +1,40 @@
+# Experiment E — the finite-N sweep. Docs: 07 Experiment E, 04 §4.8.3-4.8.4, 14 Q1.
+# The main open theoretical question in the project.
+#
+# 07 specifies N in {50, 100, 200, 500, 1000, 5000, 1e4, 1e5, 1e6}. 08 §T1.1 requires EXPLICIT
+# mode for N <= 5000, and explicit mode at N = 1e6 with R = 200,000 would be 2e11 draws per cell.
+# The grid is therefore split by mode: this config covers N <= 5000 in explicit mode, and
+# experiment_E_largeN.toml covers N >= 1e4 in mean_only, where 08 says mean_only is harmless.
+experiment_id  = "E_finite_N"
+description    = "GATE 3 re-run of experiment_E_finite_N with B9-tmin added. Every locked input is byte-identical to that config: seed_entropy, R, alpha, unlabeled_mode, coef_mode, DGP and the (n, rho, N) sweep. The experiment_id is deliberately UNCHANGED: cell seeds are derived from crc32(experiment_id), so renaming it would reseed every cell and the run would no longer reproduce the original. results/E_finite_N.csv is protected instead by writing to a separate output DIRECTORY (--output results/gate3). Purpose: verify B9-tmin == B9 on this grid, where N >= n-1 throughout. Original description: Finite-N behaviour of the leverage-corrected interval and the candidate repairs R1-R3 of 04 §4.8.4, with V_full (04 §4.8.3) as the diagnostic. Explicit unlabelled mode."
+
+seed_entropy   = 20260819
+R              = 200_000           # 07 Experiment E; coverage MC s.e. 0.00049
+alpha_levels   = [0.05]
+unlabeled_mode = "explicit"
+coef_mode      = "ols"
+
+# 07 names B1, B3, B9 and R1-R4 as B9-R1..B9-R4. R4 has no entry: it is the claim that B9 itself
+# is conservative, so it is evaluated by looking at B9's coverage. B9-vfull is the diagnostic for
+# 04 §4.8.3 and needs mu_f, which only a simulation has. B9-ppiplus answers 05 step 4 / 07's
+# "also sweep coef_mode", which matters here because r = n/N reaches 0.2 at N = 50.
+# B9-tmin appended; every other entry and its order is unchanged. B9-tmin is deterministic
+# (not in STOCHASTIC_METHODS), and run_cell draws the data ONCE before any method runs, so
+# adding it cannot perturb any other method's draws (C1). That is verified, not assumed:
+# the identity check compares B9 here against results/E_finite_N.csv.
+methods = ["B1", "B3", "B9-nolev", "B9", "B9-vfull", "B9-R1", "B9-R2", "B9-R3", "B9-R5", "B9-ppiplus", "B9-tmin"]
+
+[dgp]
+family = "gaussian"
+var_Y  = 1.0
+var_f  = 1.0
+mean_Y = 0.0
+mean_f = 0.0
+
+[sweep]
+n   = [10, 20, 50]
+rho = [0.0, 0.5, 0.9]
+N   = [50, 100, 200, 500, 1_000, 5_000]
+
+[outputs]
+save_raw = false

@@ -1,0 +1,26 @@
+# Experiment D — predictor_quality. Docs: 07 Experiment D, 12 Stage 8.
+experiment_id  = "D_predictor_quality"
+description    = "Predictor-quality sweep. Confirms the rho-invariance of the B3 deficit (V4) on a ten-point grid and maps where each fix breaks."
+
+seed_entropy   = 20260819
+R              = 200_000
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"
+coef_mode      = "ols"
+
+methods = ["B1", "B3", "B4", "B5", "B6", "B9-nolev", "B9", "B9-R2"]
+
+[dgp]
+family = "gaussian"
+var_Y  = 1.0
+var_f  = 1.0
+mean_Y = 0.0
+mean_f = 0.0
+
+[sweep]
+n   = [10, 20, 50]
+rho = [0.0, 0.1, 0.2, 0.3, 0.5, 0.7, 0.8, 0.9, 0.95, 0.99]
+N   = [1_000_000]
+
+[outputs]
+save_raw = false

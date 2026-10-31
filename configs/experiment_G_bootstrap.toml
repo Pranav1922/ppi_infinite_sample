@@ -1,0 +1,29 @@
+# Experiment G, bootstrap arm. 07 Experiment G names B7 and B8 and a grid of 7 families x 4 n x
+# 3 rho = 84 cells; at R = 200,000 and n up to 100 the bootstrap cost is ~1e4x an analytic
+# interval, which is not runnable. This arm therefore uses R = 20,000 (Experiment B's precedent)
+# and the three families that stress a symmetric interval hardest -- the most skewed continuous
+# case, the mildest, and the binary case 08 calls the most practically important -- at n in
+# {10, 20}. Stated rather than done silently; the analytic arm covers the full grid.
+experiment_id  = "G_bootstrap"
+description    = "Skew with the percentile and BCa bootstrap baselines. 07 Experiment G predicts BCa is 'designed for exactly this', so this is where it should do best."
+
+seed_entropy   = 20260819
+R              = 20_000
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"
+coef_mode      = "ols"
+
+methods = ["B1", "B3", "B7", "B8", "B9"]
+
+[dgp]
+family     = "skew"
+prevalence = 0.5
+
+[sweep]
+skew_family = ["exponential", "lognormal_severe", "binary"]
+n   = [10, 20]
+rho = [0.0, 0.5, 0.9]
+N   = [1_000_000]
+
+[outputs]
+save_raw = false

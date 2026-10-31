@@ -1,0 +1,29 @@
+# Experiment B, final-table setting: B = 9999 resamples (07 Experiment B).
+# Restricted to n = 10, which is the row K3's trigger is stated on ("B8 attains coverage >= 0.945
+# at n = 10 across all rho"). Five times the cost of B = 2000, so it is not swept over all n;
+# the B = 2000 grid in experiment_B_bootstrap.toml shows the n-dependence.
+experiment_id  = "B_final"
+description    = "Experiment B at the final-table bootstrap size B = 9999, n = 10 only. This is the evidence K3 is decided on."
+
+seed_entropy   = 20260819
+R              = 20_000
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"
+coef_mode      = "ols"
+
+methods = ["B1", "B3", "B7-B9999", "B8-B9999", "B9"]
+
+[dgp]
+family = "gaussian"
+var_Y  = 1.0
+var_f  = 1.0
+mean_Y = 0.0
+mean_f = 0.0
+
+[sweep]
+n   = [10]
+rho = [0.0, 0.3, 0.5, 0.7, 0.9]
+N   = [1_000_000]
+
+[outputs]
+save_raw = false

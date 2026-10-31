@@ -1,0 +1,26 @@
+# Experiment F, bootstrap arm. 07 Experiment F names B8 as a baseline; B8 costs ~1e4x an analytic
+# interval, so this arm runs at R = 20,000 (Experiment B's precedent, MC s.e. 0.0015) rather than
+# 200,000. Same DGP, same seed entropy, same grid.
+experiment_id  = "F_bootstrap"
+description    = "Heavy tails with the BCa bootstrap baseline, reduced R. Answers K3's outstanding second clause: does BCa succeed where it failed under M1 once the tails are heavy?"
+
+seed_entropy   = 20260819
+R              = 20_000
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"
+coef_mode      = "ols"
+
+methods = ["B1", "B3", "B8", "B9"]
+
+[dgp]
+family  = "heavy_tail"
+heavy_f = false
+
+[sweep]
+nu  = [3, 5, 10, 30]
+n   = [10, 20, 50]
+rho = [0.0, 0.5, 0.9]
+N   = [1_000_000]
+
+[outputs]
+save_raw = false

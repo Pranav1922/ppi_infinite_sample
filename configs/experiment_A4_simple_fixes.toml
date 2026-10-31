@@ -1,0 +1,31 @@
+# Experiment A, Table A4 companion — the simple-fix comparison.
+# Docs: 09 Table A4 (source: preliminary_code/cover.py). R and N differ from Table A1, so B1/B3
+# values differ slightly from Table A1; 09 says so explicitly and it is not an inconsistency.
+experiment_id  = "A4_simple_fixes"
+description    = "Reproduce 09 Table A4: do the simple fixes (t quantile, cross-fitting, hard threshold) restore coverage? Tests H2. Verification checks V4 on the wider rho grid."
+
+seed_entropy   = 20260819
+R              = 60_000            # 09: coverage MC s.e. ~ 0.00089
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"
+coef_mode      = "ols"
+
+# B5 is 06 B5's fold-split estimator; B5-avglam is the averaged-lambda scheme cover.py actually
+# computed, i.e. the one that produced Table A4's "B5 cross-fit" column. Both are reported so
+# that "cross-fitting does not fix it" is not an artefact of one scheme (06 B5 note).
+methods = ["B1", "B3", "B4", "B5", "B5-kfold", "B5-avglam", "B6", "B6-t1.5", "B6-t3"]
+
+[dgp]
+family = "gaussian"
+var_Y  = 1.0
+var_f  = 1.0
+mean_Y = 0.0
+mean_f = 0.0
+
+[sweep]
+n   = [10, 20, 50, 100]
+rho = [0.0, 0.2, 0.5, 0.8, 0.95]
+N   = [100_000]
+
+[outputs]
+save_raw = false

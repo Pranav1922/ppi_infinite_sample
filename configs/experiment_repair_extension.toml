@@ -1,0 +1,33 @@
+# Repair-comparison extension: do the published few-label repairs restore INTERVAL coverage?
+# Preregistered before the run. Writes only under results/repair_extension/.
+experiment_id = "repair_extension"
+description   = "Compare LC-PPI (B9), the t_min safeguard, and the published few-label repairs that our comparison was missing, on the paper's own common-random-number harness."
+
+seed_entropy = 20260826
+R            = 10_000     # MC s.e. 0.0022 near 0.95 -- resolves the +-0.005 tolerance
+B_boot       = 999        # bootstrap resamples; Efron's default is 1000, Zrnic fixes none
+alpha_level  = 0.05
+tolerance    = 0.005      # the paper's own band for "attains nominal"
+
+[grid]
+n   = [4, 5, 8, 10, 15, 20]
+rho = [0.0, 0.5, 0.9]
+N   = [1000]              # one computationally feasible pool size; PPBoot resamples the pool
+
+# Methods actually run. Each is marked with whether the ORIGINAL paper supplied an interval.
+[methods]
+B1              = "classical; reference point; interval is the paper's"
+B3              = "PPI++; reference point; interval is Angelopoulos et al.'s"
+B9              = "LC-PPI; interval is the classical regression-estimator interval"
+"B9-tmin"       = "LC-PPI + t_min safeguard; interval is the classical t_min rule"
+"Ridge-PPI"     = "Eyre & Madras Eq. (8) point estimator; INTERVAL IS OURS (they define none)"
+"PPBoot"        = "Zrnic Algorithm 1; interval IS theirs (percentile)"
+"Efron-PPboot2" = "Efron Section 5 PPboot2; interval IS theirs (theta_hat +- bsd)"
+
+# Not run, with the reason. Neither is approximated or substituted.
+[excluded]
+"Sigmoid-PPI"  = "Eyre & Madras Eqs. (9)-(10) are for binary h with predictions in [0,1]; the Gaussian target here is unbounded, so the sigmoid cannot represent its mean"
+"cross-PPBoot" = "Zrnic Section 4.2 trains K models f^(j) from covariates x; this DGP supplies f directly and has no x, so there is no model-fitting step to cross-fit"
+
+[checkpointing]
+mode = "one file per cell under results/repair_extension/cells/; completed cells are skipped on restart"

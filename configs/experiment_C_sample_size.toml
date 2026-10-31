@@ -1,0 +1,26 @@
+# Experiment C — sample_size. Docs: 07 Experiment C, 12 Stage 8.
+experiment_id  = "C_sample_size"
+description    = "Sample-size sweep. Maps the deficit and the correction as functions of n, especially the very-small-n region no published study covers. Tests H3 at n = 4, 5, 8."
+
+seed_entropy   = 20260819
+R              = 200_000
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"
+coef_mode      = "ols"
+
+methods = ["B1", "B3", "B4", "B5", "B9-nolev", "B9", "B9-R2"]
+
+[dgp]
+family = "gaussian"
+var_Y  = 1.0
+var_f  = 1.0
+mean_Y = 0.0
+mean_f = 0.0
+
+[sweep]
+n   = [4, 5, 8, 10, 15, 20, 50]
+rho = [0.0, 0.5, 0.9]
+N   = [1_000_000]
+
+[outputs]
+save_raw = false

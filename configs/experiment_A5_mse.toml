@@ -1,0 +1,29 @@
+# Experiment A, Table A5 companion — point-estimate MSE.
+# Docs: 09 Table A5 (source: preliminary_code/probe.py). Supplies verification check V10.
+# The "oracle lambda*" column of Table A5 is NOT reproduced here: it needs lambda_oracle, which
+# uses the population beta and is not part of extension E1.
+experiment_id  = "A5_mse"
+description    = "Reproduce 09 Table A5: MSE of the point estimates relative to classical. The headline is that cross-fitting is the worst method in the table at small n."
+
+seed_entropy   = 20260819
+R              = 40_000            # 09 Table A5
+alpha_levels   = [0.05]            # irrelevant to MSE, but a cell needs one
+unlabeled_mode = "mean_only"
+coef_mode      = "ols"
+
+methods = ["B1", "B3", "B5", "B5-avglam", "B6"]
+
+[dgp]
+family = "gaussian"
+var_Y  = 1.0
+var_f  = 1.0
+mean_Y = 0.0
+mean_f = 0.0
+
+[sweep]
+n   = [10, 20, 50, 100, 500]
+rho = [0.0, 0.1, 0.3, 0.5, 0.9]
+N   = [100_000]
+
+[outputs]
+save_raw = false

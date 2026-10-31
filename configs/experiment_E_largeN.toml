@@ -1,0 +1,28 @@
+# Experiment E, large-N arm: N >= 1e4 in mean_only mode, where 08 §T1.1 says treating sigma_f^2
+# as known is harmless (N/n >= 200). Same grid, methods and seed entropy as
+# experiment_E_finite_N.toml, so the two together cover 07's full N sweep.
+experiment_id  = "E_largeN"
+description    = "Large-N arm of Experiment E, mean_only mode. Together with E_finite_N this covers 07's N in {50 ... 1e6}."
+
+seed_entropy   = 20260819
+R              = 200_000
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"
+coef_mode      = "ols"
+
+methods = ["B1", "B3", "B9-nolev", "B9", "B9-vfull", "B9-R1", "B9-R2", "B9-R3", "B9-R5", "B9-ppiplus"]
+
+[dgp]
+family = "gaussian"
+var_Y  = 1.0
+var_f  = 1.0
+mean_Y = 0.0
+mean_f = 0.0
+
+[sweep]
+n   = [10, 20, 50]
+rho = [0.0, 0.5, 0.9]
+N   = [10_000, 100_000, 1_000_000]
+
+[outputs]
+save_raw = false

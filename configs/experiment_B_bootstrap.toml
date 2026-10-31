@@ -1,0 +1,29 @@
+# Experiment B — bootstrap comparison. Kill criterion K3 (10 K3), highest research priority
+# after Experiment A. Docs: 07 Experiment B, 06 B7/B8, 15 §11.3 E3.
+experiment_id  = "B_bootstrap"
+description    = "Does a standard nonparametric bootstrap already solve the small-n PPI++ under-coverage? B7 percentile and B8 BCa against B1, B3 and B9 on identical draws. Exploration setting, B = 2000."
+
+seed_entropy   = 20260819
+R              = 20_000            # 07 Experiment B: MC s.e. 0.0015, enough to separate 0.92 from 0.95
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"
+coef_mode      = "ols"
+
+# 07 Experiment B names B1, B3, B7, B8, B9. B9-nolev is carried along at no cost because it
+# shares B9's sufficient statistics and keeps the decomposition visible.
+methods = ["B1", "B3", "B7", "B8", "B9-nolev", "B9"]
+
+[dgp]
+family = "gaussian"
+var_Y  = 1.0
+var_f  = 1.0
+mean_Y = 0.0
+mean_f = 0.0
+
+[sweep]
+n   = [10, 20, 50]
+rho = [0.0, 0.3, 0.5, 0.7, 0.9]
+N   = [1_000_000]
+
+[outputs]
+save_raw = false

@@ -1,0 +1,110 @@
+__pycache__/
+*.egg-info/
+.pytest_cache/
+data/*
+!data/.gitkeep
+results/*_raw/
+figures/*.pdf
+.DS_Store
+~$*
+
+# macOS
+.DS_Store
+.AppleDouble
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*credentials*
+*secret*
+
+# IDE and notebook files
+.idea/
+.vscode/
+.ipynb_checkpoints/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
+
+# Generated research outputs
+results/
+results_repair_extension/
+
+# Local datasets and large generated artifacts
+data/raw/
+data/processed/
+*.h5
+*.hdf5
+*.mat
+*.npy
+*.npz
+*.pkl
+*.joblib
+*.parquet
+
+# Generated Python distributions
+build/
+dist/
+
+# Python test caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local research datasets
+data/*
+!data/.gitkeep
+*.npz
+*.parquet
+*.npy
+*.pkl
+*.joblib
+*.h5
+*.hdf5
+
+# Generated experimental outputs
+results/
+results_repair_extension/
+
+# Generated submission and presentation material
+submission/
+presentation/
+sn-article-template/
+
+# Historical manuscript snapshots
+docs/baseline_*/
+docs/statistics_and_computing_latex/
+docs/MANUSCRIPT*
+docs/STATISTICS_AND_COMPUTING_MANUSCRIPT.*
+docs/FACULTY_REVISION_INSTRUCTIONS.docx
+docs/PAPER_DRAFT.md
+docs/ABSTRACT_CANDIDATE.md
+docs/FINAL_ABSTRACT.md
+docs/FINAL_SUBMISSION_CHECKLIST.md
+docs/PAPER_SUBMISSION_CHECKLIST.md
+
+# Temporary files
+*.log
+*.tmp
+.DS_Store

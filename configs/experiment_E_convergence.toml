@@ -1,0 +1,28 @@
+# Experiment E, step 1 — does `explicit` mode approach `mean_only` as N grows?
+# 15 §4.4 warns the two modes are NOT interchangeable; this measures where they separate.
+# Run before the finite-N experiment itself, per the E4 brief.
+experiment_id  = "E_convergence_explicit"
+description    = "Convergence of the explicit unlabelled mode onto mean_only as N grows, at the two extreme rho values. n = 10 only; the mode difference is about the pool, not the gold sample."
+
+seed_entropy   = 20260819
+R              = 20_000            # MC s.e. 0.0015; enough to see a 0.005 coverage shift
+alpha_levels   = [0.05]
+unlabeled_mode = "explicit"
+coef_mode      = "ols"
+
+methods = ["B1", "B3", "B9-nolev", "B9", "B9-vfull", "B9-R1", "B9-R2", "B9-R3"]
+
+[dgp]
+family = "gaussian"
+var_Y  = 1.0
+var_f  = 1.0
+mean_Y = 0.0
+mean_f = 0.0
+
+[sweep]
+n   = [10]
+rho = [0.0, 0.9]
+N   = [200, 500, 1_000, 5_000, 10_000, 100_000, 1_000_000]
+
+[outputs]
+save_raw = false

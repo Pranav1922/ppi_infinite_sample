@@ -1,0 +1,33 @@
+# Experiment J — second real-data demonstration: MT-bench expert judgments with a GPT-4 judge.
+# Docs: docs/tier3_mtbench.md; data built by experiments/prepare_mtbench.py.
+#
+# Same protocol as Experiment I (configs/experiment_I_real_data.toml): the population is FULLY
+# OBSERVED -- an expert (gold) verdict and GPT-4's verdict on the same comparison for each of the
+# 1,478 rows -- and src/ppi_finite/realdata.py draws n rows without replacement as the gold set and
+# treats the remaining M-n as the unlabelled pool. theta = mean(Y) over the population is the
+# evaluation-only ground truth: GPT-3.5-turbo's expert-judged win rate, ties scored 1/2.
+#
+# rho and N are absent from [sweep] deliberately, as in Experiment I: on real data they are
+# observed properties of the dataset, and the runner writes the realised values into the CSV.
+experiment_id  = "J_mtbench"
+description    = "Second real-data demonstration on the MT-bench LLM-as-a-judge population by repeated gold/unlabelled subsampling. Confirmation, NOT a source of coverage theory -- see docs/tier3_mtbench.md."
+
+seed_entropy   = 20260920
+R              = 20_000            # as Experiment I
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"       # ignored by the real-data producer; the pool is the complement
+coef_mode      = "ols"
+
+# The method set of Experiment I. B9-HC is included because Y takes three values {0, 1/2, 1} and
+# f the same, so Var(Y|f) cannot be constant; B9-R2 records whether the finite-N adjustment is inert.
+methods = ["B1", "B2", "B3", "B4", "B5", "B8", "B9", "B9-R2", "B9-HC"]
+
+[dgp]
+family  = "galaxies"               # the fully-observed-population producer, reused unchanged
+dataset = "mtbench"
+
+[sweep]
+n = [10, 20, 50, 100]
+
+[outputs]
+save_raw = true

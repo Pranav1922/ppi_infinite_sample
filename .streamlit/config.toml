@@ -1,0 +1,15 @@
+# Presentation only. This file themes the dashboard and has no bearing on any experiment,
+# estimator, seed or result: nothing under src/, results/, configs/ or docs/ reads it.
+[theme]
+base                = "dark"
+primaryColor        = "#58a6ff"
+backgroundColor     = "#0d1117"
+secondaryBackgroundColor = "#161b22"
+textColor           = "#e6edf3"
+font                = "serif"
+
+[server]
+headless = true
+
+[browser]
+gatherUsageStats = false

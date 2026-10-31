@@ -1,0 +1,6 @@
+# Exact versions used to produce the recorded results (09 §Environment reference env:
+# Python 3.11.15 / NumPy 2.4.4 / SciPy 1.17.1).
+numpy==2.4.4
+scipy==1.17.1
+pandas==3.0.2
+pytest==9.1.1

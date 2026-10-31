@@ -1,0 +1,32 @@
+# Experiment G — skew and discrete labels. Docs: 07 Experiment G, 08 §T1.3, 10 H4.
+# Analytic arm at the pre-registered R = 200,000; the B7/B8 bootstrap baselines 07 also names are
+# in experiment_G_bootstrap.toml at reduced R and on a reduced grid (cost; see that file).
+#
+# The binary family is the case 08 §T1.3 calls "the most practically important synthetic case,
+# because in LLM-annotation work the gold label is usually a binary human judgement". For it,
+# theta = prevalence = 0.5, not 0, and rho is a TARGET: with Gaussian f and binary Y at prevalence
+# 0.5 the correlation is capped at 2*phi(0) = 0.7979, so the rho = 0.9 cell is run at its closest
+# achievable value, exactly as 07 Experiment G provides for.
+experiment_id  = "G_skew"
+description    = "Skewed and discrete residuals. Tests H4 for asymmetric errors; the metric that matters is one-sided miscoverage in each tail separately (07)."
+
+seed_entropy   = 20260819
+R              = 200_000
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"
+coef_mode      = "ols"
+
+methods = ["B1", "B3", "B9-nolev", "B9", "B9-R2", "B9-HC"]
+
+[dgp]
+family     = "skew"
+prevalence = 0.5
+
+[sweep]
+skew_family = ["exponential", "gamma1", "gamma2", "gamma5", "lognormal_mild", "lognormal_severe", "binary"]
+n   = [10, 20, 50, 100]
+rho = [0.0, 0.5, 0.9]
+N   = [1_000_000]
+
+[outputs]
+save_raw = false

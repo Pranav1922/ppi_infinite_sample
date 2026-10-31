@@ -1,0 +1,46 @@
+# Gate 2 — validate Theorem G1's bound and map the under-coverage boundary.
+# Docs: theory_finite_N.md Part VI (Theorem G1, Result G8). Preregistered before the run.
+experiment_id = "Gate2_boundary"
+description   = "Validate |Delta_cov| <= B(n,rho,alpha,N) on a grid straddling N = n-1; map where coverage first falls below 1-alpha; test four N-aware quantile candidates against the deployed t_{n-2}."
+
+seed_entropy = 20260824      # Gate-2 base entropy. Never change without an entry in 13.
+R            = 400_000       # Rao-Blackwellised; conservative binomial MC s.e. 0.00079
+alpha_level  = 0.05
+
+# The pool variance is ESTIMATED from the pool (ddof=1), which is what B9 does in `explicit`
+# mode and what Gate 1 showed the earlier ablation had held fixed. Never set this false here.
+sigma_f_estimated = true
+
+# --- Part A: the theorem-validation grid -------------------------------------------------------
+# N spans both sides of the Result G8 boundary N = n-1 for every n. N >= 2 is required for
+# sigma_f^2 to have any degrees of freedom (N-1 >= 1); n >= 4 is required by Theorem G1.
+[grid_A]
+n   = [4, 5, 10, 20, 50]
+rho = [0.0, 0.5, 0.9, 0.95, 0.99]
+N   = [2, 3, 5, 10, 25, 50, 100, 500, 1000]
+
+# --- Part C: the boundary map ------------------------------------------------------------------
+# Dense in N around N = n-1, restricted to the strong-predictor regime where G8 bites.
+[grid_C]
+n   = [10, 20, 50]
+rho = [0.9, 0.95, 0.99, 0.999]
+N   = [2, 3, 5, 8, 9, 10, 12, 15, 18, 19, 20, 25, 30, 40, 48, 49, 50, 60, 80, 100, 200, 500]
+
+# --- Part D/E: candidate quantile rules --------------------------------------------------------
+# Evaluated on the SAME draws as the grids above (common random numbers), so differences between
+# candidates carry no Monte-Carlo noise. None is assumed correct; all are measured.
+[candidates]
+B9_t_n2   = "deployed: t_{n-2}, the pool's degrees of freedom omitted"
+C1_t_N1   = "t_{N-1}: the rho -> 1 limit law, used everywhere"
+C2_t_min  = "t_{min(n-2, N-1)}: the conservative pick of the two"
+C3_ws2    = "Welch-Satterthwaite with BOTH components' df: nu_eff = (V1+V2)^2/(V1^2/(n-2) + V2^2/(N-1))"
+C4_exact2 = "exact quantile of the two-estimated-variance idealisation (generalises r5)"
+R2_ws_inf = "deployed r2: Welch-Satterthwaite with the pool component at nu = infinity"
+
+# --- Locked acceptance criteria (fixed before the run; do not edit afterwards) ------------------
+[criteria]
+# Part B: the bound is a theorem, not a fitted threshold. Any violation halts Gate 2.
+max_violations_allowed = 0
+# Part F: a candidate is only a *candidate repair* if it satisfies BOTH limits exactly and does
+# not under-cover anywhere on grid_A by more than 3 combined MC standard errors.
+undercoverage_tolerance_se = 3.0

@@ -1,0 +1,41 @@
+# Experiment A — reproduction of the preliminary Gaussian result.
+# Docs: 07 Experiment A, 09 Tables A1-A3, 15 §7.2 and §11 (MVP).
+experiment_id  = "A_reproduction"
+description    = "Independently reproduce H1 (PPI++ under-covers at small n) and H3 (the leverage correction restores nominal coverage). MVP acceptance gate, 15 §11.2."
+
+seed_entropy   = 20260819          # BASE_ENTROPY. Never change without an entry in 13.
+R              = 200_000           # 09: coverage MC s.e. near 0.95 is 0.00049
+alpha_levels   = [0.05, 0.10, 0.01]   # 0.05 primary; 0.10 and 0.01 secondary (07 Experiment A)
+unlabeled_mode = "mean_only"       # what produced the preliminary numbers (08 §T1.1, 15 §4.4)
+coef_mode      = "ols"             # 05 step 4 note: the point estimate uses b, not b/(1+r)
+
+# 07 Experiment A names B1, B3, B4, B5, B6, B9. B2 and B9-nolev were added by 15 §11.1 (B2
+# isolates the effect of estimating lambda; B9-nolev is the decomposition control V7 needs).
+# B5-kfold and B5-avglam are the alternative cross-fitting schemes 06 B5 requires to be offered
+# and reported. B7/B8 (E3) and B10 are not implemented yet and are absent rather than listed.
+methods = ["B1", "B2", "B3", "B4", "B5", "B5-kfold", "B5-avglam", "B6", "B9-nolev", "B9"]
+
+# mean-only mode treats sigma_f^2 as known, which is not appropriate at N = 1000 or N = 200
+# (08 §T1.1 consistency requirement). The preliminary study did exactly that (09 §Provenance,
+# known issue 4) and Table A3 is the result, so Experiment A reproduces it deliberately.
+# Experiment E (extension E4) must revisit these cells in "explicit" mode.
+allow_mean_only_small_N = true
+
+[dgp]
+family = "gaussian"                # T1.1 (08): f ~ N(0,1), Y = rho f + sqrt(1-rho^2) eps
+var_Y  = 1.0
+var_f  = 1.0
+mean_Y = 0.0                       # => theta = E[Y] = 0
+mean_f = 0.0
+
+[sweep]
+n   = [10, 20, 50]
+rho = [0.0, 0.5, 0.9]
+N   = [1_000_000, 1_000, 200]
+
+[outputs]
+# 81 cells x 5 methods x 200,000 replications of (covered, width, theta_hat) is ~1.4 GB of npz.
+# 15 §8.3 makes the raw store regenerable from the sidecar and git-ignored, and no MVP check
+# (V1, V2, V3, V5, V6, V7, V8, V11) reads it, so it is off here. Turn it on for tail analysis.
+save_raw = false
+figures  = []                      # plots.py is extension E2

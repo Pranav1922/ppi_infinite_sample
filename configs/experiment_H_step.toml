@@ -1,0 +1,27 @@
+# Experiment H — heteroskedasticity. Docs: 07 Experiment H, 08 §T1.4, 10 H4.
+# gamma = 0 recovers T1.1 exactly and is the control the experiment needs.
+# B9-HC is the HC3 sandwich variant. 07 Experiment H records, and this repository repeats, that
+# the HC variant almost certainly retains NO exactness claim -- it is an asymptotic refinement.
+experiment_id  = "H_step"
+description    = "The two-group step variant of 08 §T1.4: sigma(f) = 1 + gamma*1{f>0}, closer to annotation settings where the model is reliable on easy items and noisy on hard ones."
+
+seed_entropy   = 20260819
+R              = 200_000
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"
+coef_mode      = "ols"
+
+methods = ["B1", "B3", "B9-nolev", "B9", "B9-R2", "B9-HC"]
+
+[dgp]
+family = "heteroskedastic"
+form   = "step"
+
+[sweep]
+gamma = [0.0, 0.25, 0.5, 1.0]
+n   = [10, 20, 50]
+rho = [0.0, 0.5, 0.9]
+N   = [1_000_000]
+
+[outputs]
+save_raw = false

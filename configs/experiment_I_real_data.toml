@@ -1,0 +1,36 @@
+# Experiment I — real-data validation on the Galaxies population.
+# Docs: 07 Experiment I, 08 Tier 2/Tier 3, docs/tier2_galaxies.md.
+#
+# The dataset is a FULLY OBSERVED population: a gold label and a model prediction for every one of
+# 16,743 items, with no pre-split unlabelled arm. src/ppi_finite/realdata.py constructs the split
+# per 08 Tier 2 step 4 -- n rows without replacement as the gold set, the remaining M-n as the
+# unlabelled pool -- and theta = mean(Y) over the population is the evaluation-only ground truth.
+#
+# rho and N are ABSENT from [sweep] deliberately: on real data they are observed properties of the
+# dataset, not controls (07: "the realised rho of the dataset (reported, not controlled)"). The
+# runner writes the realised values into the CSV.
+experiment_id  = "I_real_data"
+description    = "Applied demonstration of B1/B2/B3/B4/B5/B8/B9 on the Galaxies population by repeated gold/unlabelled subsampling. Confirmation, NOT a source of coverage theory -- see 07 Experiment I and docs/tier2_galaxies.md."
+
+seed_entropy   = 20260819
+R              = 20_000            # 07 Experiment I: subsampling replications
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"       # ignored by the real-data producer; the pool is the complement
+coef_mode      = "ols"
+
+# 07 Experiment I names B1, B3, B4, B5, B8, B9. B2 (plain PPI) is added because the user-facing
+# comparison is classical / PPI / PPI++ / LC-PPI. B9-HC is included because heteroskedasticity is
+# not merely suspected but GUARANTEED here: Y is binary, so Var(Y|f) = p(f)(1-p(f)) cannot be
+# constant, and the measured residual variance varies 12.6x across quintiles of f.
+# B9-R2 is included only to record that its finite-N adjustment is inert on this dataset.
+methods = ["B1", "B2", "B3", "B4", "B5", "B8", "B9", "B9-R2", "B9-HC"]
+
+[dgp]
+family  = "galaxies"
+dataset = "galaxies"
+
+[sweep]
+n = [10, 20, 50, 100]
+
+[outputs]
+save_raw = true                    # per-replication estimates drive the E6 figures

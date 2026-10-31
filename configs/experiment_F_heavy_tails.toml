@@ -1,0 +1,28 @@
+# Experiment F — heavy tails. Docs: 07 Experiment F, 08 §T1.2, 10 H4/K4.
+# Analytic arm at the pre-registered R = 200,000. The bootstrap baseline B8 that 07 also names is
+# in experiment_F_bootstrap.toml at R = 20,000, following Experiment B's precedent -- B8 costs
+# ~1e4x an analytic interval, so 07's R = 200,000 and its B8 baseline cannot both be honoured in
+# one config. The deviation is stated here rather than made silently.
+experiment_id  = "F_heavy_tails"
+description    = "Heavy-tailed residuals, standardised Student-t. Tests H4; kill criterion K4. The comparison that matters is B9 vs B1, not B9 vs 0.95 (07, 10 H4)."
+
+seed_entropy   = 20260819
+R              = 200_000
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"
+coef_mode      = "ols"
+
+methods = ["B1", "B3", "B9-nolev", "B9", "B9-R2", "B9-HC"]
+
+[dgp]
+family  = "heavy_tail"
+heavy_f = false
+
+[sweep]
+nu  = [3, 5, 10, 30]
+n   = [10, 20, 50]
+rho = [0.0, 0.5, 0.9]
+N   = [1_000_000]
+
+[outputs]
+save_raw = false

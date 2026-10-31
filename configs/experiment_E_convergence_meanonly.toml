@@ -1,0 +1,30 @@
+# The mean_only twin of experiment_E_convergence.toml: identical grid, identical seed entropy,
+# only the unlabelled mode differs. The two cannot be paired replication-by-replication (the
+# modes consume the generator differently), so they are compared in distribution.
+experiment_id  = "E_convergence_meanonly"
+description    = "mean_only twin of E_convergence_explicit. mean_only treats sigma_f^2 as known, which is exactly the approximation under test."
+
+seed_entropy   = 20260819
+R              = 20_000
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"
+coef_mode      = "ols"
+# mean_only at N <= 5000 is the approximation being measured here, so it is asked for explicitly.
+allow_mean_only_small_N = true
+
+methods = ["B1", "B3", "B9-nolev", "B9", "B9-vfull", "B9-R1", "B9-R2", "B9-R3"]
+
+[dgp]
+family = "gaussian"
+var_Y  = 1.0
+var_f  = 1.0
+mean_Y = 0.0
+mean_f = 0.0
+
+[sweep]
+n   = [10]
+rho = [0.0, 0.9]
+N   = [200, 500, 1_000, 5_000, 10_000, 100_000, 1_000_000]
+
+[outputs]
+save_raw = false

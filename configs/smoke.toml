@@ -1,0 +1,26 @@
+# Fast configuration used by CI and by the determinism test. Same shape as Experiment A,
+# R reduced so that the whole thing runs in seconds. Its numbers are NOT reproduction targets:
+# at R = 2000 the coverage MC s.e. is 0.0049.
+experiment_id  = "smoke"
+description    = "Reduced-R smoke run (15 §2). Not a reproduction target."
+seed_entropy   = 20260819
+R              = 2_000
+alpha_levels   = [0.05]
+unlabeled_mode = "mean_only"
+coef_mode      = "ols"
+methods = ["B1", "B2", "B3", "B9-nolev", "B9"]
+
+[dgp]
+family = "gaussian"
+var_Y  = 1.0
+var_f  = 1.0
+mean_Y = 0.0
+mean_f = 0.0
+
+[sweep]
+n   = [10]
+rho = [0.0, 0.9]
+N   = [1_000_000]
+
+[outputs]
+save_raw = false
